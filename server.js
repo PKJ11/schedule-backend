@@ -14,9 +14,16 @@ const app = express();
 require('./config/db')();
 
 // Middlewares
+// Add these at the top of your middleware chain
+app.use(express.json({ limit: '10mb' })); // For parsing application/json
+app.use(express.urlencoded({ extended: true, limit: '10mb' })); // For parsing form data
+
+// CORS configuration (update with your frontend URL)
 app.use(cors({
-  origin: true, // Your frontend URL
-  credentials: true,
+  origin: ['http://localhost:8080', 'https://comment-cal-media-flow.vercel.app'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser());
