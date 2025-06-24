@@ -6,8 +6,6 @@ const multer = require('multer');
 
 const router = express.Router();
 
-// Configure multer for file uploads
-const upload = multer({ dest: 'uploads/' });
 
 // Public routes
 router.get('/', postsController.getAllPosts);
@@ -20,13 +18,11 @@ router.use(authController.protect);
 router.post(
   '/',
   authController.restrictTo('uploader'),
-  upload.single('image'),
   postsController.createPost
 );
 router.patch(
   '/:id',
   authController.restrictTo('uploader'),
-  upload.single('image'),
   postsController.updatePost
 );
 router.delete(
