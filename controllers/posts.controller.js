@@ -53,7 +53,7 @@ exports.getPost = async (req, res, next) => {
 exports.createPost = async (req, res, next) => {
   try {
     const { title, content, date, image } = req.body; // Now getting image as URL string
-
+    console.log("req",req.body)
     const newPost = await Post.create({
       title,
       content,
