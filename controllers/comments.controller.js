@@ -25,12 +25,23 @@ exports.createComment = async (req, res, next) => {
 
 exports.createAnnotation = async (req, res, next) => {
   try {
-    const { text, x, y } = req.body;
+    const { text, x, y, timestamp, mediaType = 'image' } = req.body;
+
+    // Validate based on mediaType
+    if (mediaType === 'image' && (x === undefined || y === undefined)) {
+      return next(new AppError('Image annotations require x and y coordinates', 400));
+    }
+    
+    if (mediaType === 'video' && timestamp === undefined) {
+      return next(new AppError('Video annotations require a timestamp', 400));
+    }
 
     const newAnnotation = await Annotation.create({
       text,
       x,
       y,
+      timestamp,
+      mediaType,
       post: req.params.postId,
       author: req.user.id,
     });

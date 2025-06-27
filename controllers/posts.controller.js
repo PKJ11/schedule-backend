@@ -52,13 +52,14 @@ exports.getPost = async (req, res, next) => {
 
 exports.createPost = async (req, res, next) => {
   try {
-    const { title, content, date, image } = req.body; // Now getting image as URL string
+    const { title, content, date, image, video} = req.body; // Now getting image as URL string
     console.log("req",req.body)
     const newPost = await Post.create({
       title,
       content,
       date,
-      image: image || undefined, // Save the URL directly
+      image: image || undefined, 
+      video: video || undefined, 
       author: req.user.id,
     });
 
@@ -75,7 +76,7 @@ exports.createPost = async (req, res, next) => {
 
 exports.updatePost = async (req, res, next) => {
   try {
-    const { title, content, date, image } = req.body;
+    const { title, content, date, image, video} = req.body;
 
     const post = await Post.findByIdAndUpdate(
       req.params.id,

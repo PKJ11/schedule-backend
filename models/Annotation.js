@@ -7,15 +7,24 @@ const annotationSchema = new mongoose.Schema({
   },
   x: {
     type: Number,
-    required: [true, 'An annotation must have x coordinate'],
+    required: function() { return this.mediaType === 'image'; },
     min: 0,
     max: 100,
   },
   y: {
     type: Number,
-    required: [true, 'An annotation must have y coordinate'],
+    required: function() { return this.mediaType === 'image'; },
     min: 0,
     max: 100,
+  },
+  timestamp: {
+    type: Number,
+    required: function() { return this.mediaType === 'video'; },
+  },
+  mediaType: {
+    type: String,
+    enum: ['image', 'video'],
+    default: 'image',
   },
   post: {
     type: mongoose.Schema.ObjectId,
