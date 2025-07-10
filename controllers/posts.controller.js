@@ -14,7 +14,7 @@ exports.getAllPosts = async (req, res, next) => {
         $lte: new Date(endDate),
       };
     }
-
+    
     const posts = await Post.find(query)
       .populate("author", "name")
       .sort({ date: 1 });
@@ -24,6 +24,31 @@ exports.getAllPosts = async (req, res, next) => {
       results: posts.length,
       data: {
         posts,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updatePostStatus = async (req, res, next) => {
+  try {
+    console.log("hiii ")
+    const { status } = req.body;
+    const post = await Post.findById(req.params.id);
+    console.log("status from the update posts",{status,post})
+    if (!post) {
+      return next(new AppError("No post found with that ID", 404));
+    }
+
+
+    post.status = status;
+    await post.save();
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        post,
       },
     });
   } catch (err) {
@@ -53,7 +78,6 @@ exports.getPost = async (req, res, next) => {
 exports.createPost = async (req, res, next) => {
   try {
     const { title, content, date, image, video} = req.body; // Now getting image as URL string
-    console.log("req",req.body)
     const newPost = await Post.create({
       title,
       content,
@@ -61,6 +85,7 @@ exports.createPost = async (req, res, next) => {
       image: image || undefined, 
       video: video || undefined, 
       author: req.user.id,
+      status: 'New'
     });
 
     res.status(201).json({
@@ -148,12 +173,10 @@ exports.getPostComments = async (req, res, next) => {
 
 exports.getPostAnnotations = async (req, res, next) => {
   try {
-    console.log(req.params);
+    
     const annotations = await Annotation.find({ post: req.params.postId })
       .populate("author", "name")
       .sort({ createdAt: -1 });
-
-    console.log(annotations);
     res.status(200).json({
       status: "success",
       results: annotations.length,

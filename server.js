@@ -21,14 +21,15 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' })); // For parsing f
 // CORS configuration (update with your frontend URL)
 app.use(cors({
   origin: ['http://localhost:8080', 'https://comment-cal-media-flow.vercel.app'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+// app.js or server.js
+require('./jobs/dailyReminder');
 // Routes
 const routes = require('./routes');
 app.use('/api', routes);
@@ -38,7 +39,7 @@ app.use(globalErrorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.use('/',(req,res)=>{
-    res.send(`backend is running on port ${PORT}`)
+    res.send(`backend for schdule app is running on port ${PORT}`)
 })
 
 const server = app.listen(PORT, () => {

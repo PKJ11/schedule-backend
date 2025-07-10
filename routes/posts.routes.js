@@ -28,7 +28,11 @@ router.delete(
   authController.restrictTo('uploader'),
   postsController.deletePost
 );
-
+router.patch(
+  "/:id/status",
+  authController.protect,
+  postsController.updatePostStatus
+);
 // Comment routes
 router.get('/:postId/comments', postsController.getPostComments);
 router.post('/:postId/comments', commentsController.createComment);

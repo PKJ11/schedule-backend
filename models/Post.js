@@ -23,6 +23,11 @@ const postSchema = new mongoose.Schema({
     ref: "User",
     required: [true, "A post must belong to a user"],
   },
+  status: {
+    type: String,
+    enum: ['New', 'Review Comments Open', 'Changes Made (pending approval)', 'Approved'],
+    default: 'New'
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken');
 exports.signup = async (req, res, next) => {
   try {
     const { name, email, password, passwordConfirm, role } = req.body;
-    console.log("users :", { name, email, password, passwordConfirm, role });
 
     // Add timeout handling
     const createUserPromise = User.create({
